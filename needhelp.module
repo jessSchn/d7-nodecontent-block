@@ -1,0 +1,62 @@
+<?php
+
+/**
+* @file
+* Sets up the "Need Help" Block that appears at the bottom of Product pages
+*/
+
+/**
+* List the block on the block listing page
+*/
+
+function needhelp_block_info(){
+	$blocks['needhelp'] = array(
+    'info' => t('Need Help'), 
+    'cache' => DRUPAL_NO_CACHE,
+  );
+	
+	return $blocks;
+}
+
+
+/**
+* Get the block
+*/
+function needhelp_block_view($delta = '') {
+  $block = array();
+
+  if ($delta == 'needhelp'){
+	  $block['subject'] = t('Need Help');
+	  $block['content'] = needhelp_block_contents($delta);
+	  //$block['content'] = print_r($field);
+	  return $block;
+	  
+  }
+}
+
+/**
+* Fill the block with copy and links
+*/
+
+function needhelp_block_contents($delta){
+	if ($delta == 'needhelp'){
+	  
+	  $node = menu_get_object('node');
+	  
+	  //check the content type we are on to help build the dynamic links to the webform.
+	  if ($node && $node->type === 'products_basic') {
+		$content_prd_id = field_get_items('node', $node, 'field_product_id');
+		$basic_id = $content_prd_id[0]['value'];
+		
+		$request_trial = '<a href="/node/134?prod='.$basic_id.'">Request Free Trial</a>';
+		$request_prod_info = '<a href="/node/133?prod='.$basic_id.'">Request Product Info</a>';
+	  }
+	 
+	 //build the block information
+	 
+	 $needhelp_output = '<div class="needhelp_left_col"><p><strong>Talk to Us</strong><br/>In the U.S. and Canada, call x-xxx-xxx-xxxx<br/>Elswhere in the world, contact your local international office.</p></div><div class="needhelp_right_col"><div class="arrow-button">'.$request_trial.'</div><br/><div class="arrow-button">'.$request_prod_info.'</div></div>';
+	 
+	 return $needhelp_output;
+	 
+  }
+}

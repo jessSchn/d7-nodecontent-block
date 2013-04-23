@@ -1,0 +1,5 @@
+name = NeedHelp
+description = Block for Need Help links. Dynamically populates the url arguments
+package = Custom
+core = 7.x
+files[] = needhelp.module
