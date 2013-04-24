@@ -41,20 +41,55 @@ function needhelp_block_view($delta = '') {
 function needhelp_block_contents($delta){
 	if ($delta == 'needhelp'){
 	  
+	  //get the access to the node information
 	  $node = menu_get_object('node');
 	  
 	  //check the content type we are on to help build the dynamic links to the webform.
-	  if ($node && $node->type === 'products_basic') {
-		$content_prd_id = field_get_items('node', $node, 'field_product_id');
-		$basic_id = $content_prd_id[0]['value'];
+	  
+	  //getting information from Products - Robot Basic Content Type
+	  if ($node && $node->type === 'products_robot_basic') {
+		 
+		 //get the product id that is set on the node
+		$rbt_content_prd_id = field_get_items('node', $node, 'field_robot_product_id');
+		$rbt_basic_id = $rbt_content_prd_id[0]['value'];
 		
-		$request_trial = '<a href="/node/134?prod='.$basic_id.'">Request Free Trial</a>';
-		$request_prod_info = '<a href="/node/133?prod='.$basic_id.'">Request Product Info</a>';
+		$request_trial = '<a href="/node/134?line=robot&prod='.$rbt_basic_id.'">Request Free Trial</a>';
+		$request_prod_info = '<a href="/node/133?line=robot&prod='.$rbt_basic_id.'">Request Product Info</a>';
 	  }
+	  
+	  //getting information from Products - PowerTech
+	  if ($node && $node->type === 'products_powertech'){
+		  
+		  //get the product id that is set on the node
+		 $pt_content_prd_id = field_get_items('node', $node, 'field_powertech_product_id');
+		$pt_basic_id = $pt_content_prd_id[0]['value'];
+		
+		$request_trial = '<a href="/node/134?line=powertech&prod='.$pt_basic_id.'">Request Free Trial</a>';
+		$request_prod_info = '<a href="/node/133?line=powertech&prod='.$pt_basic_id.'">Request Product Info</a>';
+		  
+	  }
+	  
+	  //getting information from Solutions 
+	  if ($node && $node->type === 'solutions'){
+		  		
+		//get the taxonomy machine value that is set on the node. We are not passing product information
+		$sol_tax = field_get_items('node', $node, 'field_product_division');
+		
+		//turn the taxonomy machine value into human readable format
+		if ($sol_tax) {
+          $sol_tax_value = field_view_value('node', $node, 'field_product_division', $sol_tax[0]);
+		  $sol_tax_title = strtolower($sol_tax_value['#title']);
+     	}
+		
+		$request_trial = '<a href="/node/134?line='.$sol_tax_title.'">Request Free Trial</a>';
+		$request_prod_info = '<a href="/node/133?line='.$sol_tax_title.'">Request Product Info</a>';
+		  
+	  }
+	 
 	 
 	 //build the block information
 	 
-	 $needhelp_output = '<div class="needhelp_left_col"><p><strong>Talk to Us</strong><br/>In the U.S. and Canada, call x-xxx-xxx-xxxx<br/>Elswhere in the world, contact your local international office.</p></div><div class="needhelp_right_col"><div class="arrow-button">'.$request_trial.'</div><br/><div class="arrow-button">'.$request_prod_info.'</div></div>';
+	 $needhelp_output = '<div class="needhelp_left_col"><p><strong>Talk to Us</strong><br/>In the U.S. and Canada, call 1-800-328-1000<br/>Elswhere in the world, contact your local international office.</p></div><div class="needhelp_right_col"><div class="arrow-button">'.$request_trial.'</div><br/><div class="arrow-button">'.$request_prod_info.'</div></div>';
 	 
 	 return $needhelp_output;
 	 
